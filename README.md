@@ -2,9 +2,10 @@
 
 **Team:** Chicken Biryani  
 **Members:** 
+- Unnath Chittimalla (IMT2023620)
 - Areen Patil (IMT2023013)  
 - Prakrititz Borah (IMT2023547)  
-- Unnath Chittimalla (IMT2023620)
+
 
 ---
 

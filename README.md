@@ -1,10 +1,7 @@
-# ML-Project-Part-2
-
 # Advanced Classification Systems: Risk Prediction & Travel Behavior Insights
 
 **Team:** Chicken Biryani  
-**Members:** 
-- Areen Patil (IMT2023013)  
+**Members:** - Areen Patil (IMT2023013)  
 - Prakrititz Borah (IMT2023547)  
 - Unnath Chittimalla (IMT2023620)
 
@@ -18,50 +15,59 @@ Our approach prioritizes data-centric AI over model-centric tuning. We utilized 
 ---
 
 ## 🚀 Project 1: Risk Prediction System
-**Goal:** Predict the `RiskFlag` of user profiles based on high-dimensional behavioral and financial data.
+[cite_start]**Goal:** Predict the `RiskFlag` of user profiles based on high-dimensional behavioral and financial data[cite: 307].
 
-### 🧠 Key Methodologies
-* **Gaussian Quantile Transformation:** We addressed skewed numerical distributions (e.g., `ApplicantYears`, `AnnualEarnings`) by forcing them into a Normal Distribution via Quantile Transformation. This stabilized gradients for the Neural Network.
-* **Split-Stream Categorical Encoding:**
-    * **Low Cardinality (<10):** One-Hot Encoding.
-    * **High Cardinality:** Target Encoding to compress sparse data into dense "risk probability" features.
-* **Bagged SVM Optimization:** To solve the $O(N^3)$ complexity of SVMs, we implemented a **Bagging Ensemble** where 10 independent SVMs trained on random 15% subsets of the data, achieving non-linear separation without the computational bottleneck.
+### 📊 Exploratory Analysis & Method
+We faced a significant class imbalance and skewed numerical features.
+![Risk Target Distribution](assets/risk_target_dist.png)
+[cite_start]*Figure 1: Target Variable Distribution showing the imbalance between "No Risk" (0) and "Risk" (1)[cite: 324, 327].*
 
-### 🏗️ Model Architectures
-1.  **Deep Learning (PyTorch MLP):** * Architecture: Funnel structure (512 $\to$ 256 $\to$ 128).
-    * Activation: **GELU** (Gaussian Error Linear Unit) to prevent "dying ReLU".
-    * Scheduler: **OneCycleLR** for super-convergence.
-2.  **Logistic Regression:** Uses the **SAGA** solver for fast convergence on L1/L2 regularized problems.
+**The Gaussian Fix:**
+Standard scaling failed because features like `ApplicantYears` followed a Power Law. [cite_start]We used **Quantile Transformation** to force these features into a Gaussian (Bell Curve) distribution, stabilizing the Neural Network gradients[cite: 364, 367].
 
-### 📊 Performance
+![Quantile Transformation](assets/risk_quantile_transform.png)
+[cite_start]*Figure 2: Transformation of 'ApplicantYears' from raw skewed data (Left) to Gaussian distribution (Right)[cite: 368, 389].*
+
+### 🧠 Key Architectures
+* [cite_start]**Deep Learning (PyTorch MLP):** Uses a funnel architecture (512 $\to$ 256 $\to$ 128) with **GELU** activation and **OneCycleLR** scheduler[cite: 416, 420].
+* [cite_start]**Bagged SVM:** To solve the $O(N^3)$ complexity of SVMs, we implemented a **Bagging Ensemble** where 10 independent SVMs trained on random 15% subsets of the data[cite: 435, 436].
+
+### 📈 Performance
 | Model | Accuracy | Key Configuration |
 | :--- | :--- | :--- |
-| **Deep Learning (MLP)** | **0.888** | OneCycleLR, GELU, Quantile Transform |
-| Logistic Regression | 0.887 | SAGA Solver, Elastic Net |
-| Bagged SVM | 0.884 | 10 Estimators, RBF Kernel |
+| **Deep Learning (MLP)** | **0.888** | [cite_start]OneCycleLR, GELU, Quantile Transform [cite: 442] |
+| Logistic Regression | 0.887 | [cite_start]SAGA Solver, Elastic Net [cite: 442] |
+| Bagged SVM | 0.884 | [cite_start]10 Estimators, RBF Kernel [cite: 442] |
 
 ---
 
 ## ✈️ Project 2: Travel Behavior Insights
-**Goal:** Predict traveler `Spend_Category` (High/Medium/Low) using profile and trip details.
+[cite_start]**Goal:** Predict traveler `Spend_Category` (High/Medium/Low) using profile and trip details[cite: 7].
 
 ### 🧠 Feature Engineering "Secret Sauce"
-Instead of raw columns, we engineered features based on domain logic:
-* **Economic Tiering:** Mapped raw country names to GDP tiers (e.g., USA $\to$ High, Kenya $\to$ Low).
-* **Package Inclusion Score:** A summation of binary flags (Food + Transport + Guide) to quantify luxury level.
-* **The "Free Loader" Flag:** A specific interaction feature identifying users who visit friends, travel independently, and pay \$0 for accommodation.
-* **Log Normalization:** Applied `np.log1p` to stay durations to handle power-law distributions.
+[cite_start]We engineered features based on domain logic rather than raw columns[cite: 85]:
+* [cite_start]**Economic Tiering:** Mapped raw country names to GDP tiers (e.g., USA $\to$ High, Kenya $\to$ Low)[cite: 88].
+* [cite_start]**Package Inclusion Score:** A summation of binary flags (Food + Transport + Guide) to quantify luxury level[cite: 90].
+* [cite_start]**Log Normalization:** Applied `np.log1p` to stay durations to handle power-law distributions[cite: 81].
+
+![Feature Correlation](assets/travel_correlation.png)
+[cite_start]*Figure 3: Correlation Matrix confirming 'Package_Inclusion_Score' as a strong predictor[cite: 245].*
 
 ### 🏗️ Hybrid Stacking Architecture
 We employed a **Stacking Classifier** with a "Passthrough" strategy:
-1.  **Level 0 (Base Models):** * *PyTorch MLP:* Captures complex non-linear patterns.
-    * *Linear SVC:* Captures high-dimensional sparse boundaries.
-2.  **Level 1 (Meta-Learner):** * *Logistic Regression:* Receives predictions from Level 0 **AND** the original raw features to make the final decision.
+1.  [cite_start]**Level 0 (Base Models):** * *PyTorch MLP:* Captures complex non-linear patterns[cite: 250].
+    * [cite_start]*Linear SVM:* Captures high-dimensional sparse boundaries[cite: 259].
+2.  [cite_start]**Level 1 (Meta-Learner):** * *Logistic Regression:* Receives predictions from Level 0 **AND** the original raw features to make the final decision[cite: 263].
+
+### 🔍 Explainability (SHAP)
+We validated our model using SHAP values. [cite_start]The engineered feature `log_total_stay_nights` was identified as the #1 predictor of spending[cite: 270].
+
+![SHAP Summary Plot](assets/travel_shap.png)
+[cite_start]*Figure 4: SHAP summary plot showing feature impact on model output[cite: 302].*
 
 ### 📊 Performance
-* **Validation Accuracy:** 71.85%
-* **Macro F1 Score:** 0.67
-* **Explainability:** SHAP analysis confirmed `log_total_stay_nights` and `Package_Inclusion_Score` as the top predictors.
+* [cite_start]**Validation Accuracy:** 71.85% [cite: 267]
+* [cite_start]**Macro F1 Score:** 0.67 [cite: 267]
 
 ---
 

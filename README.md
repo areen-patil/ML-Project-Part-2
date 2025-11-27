@@ -1,7 +1,8 @@
 # Advanced Classification Systems: Risk Prediction & Travel Behavior Insights
 
 **Team:** Chicken Biryani  
-**Members:** - Unnath Chittimalla (IMT2023620)
+**Members:** 
+- Unnath Chittimalla (IMT2023620)
 - Areen Patil (IMT2023013)  
 - Prakrititz Borah (IMT2023547)  
 

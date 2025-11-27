@@ -1,7 +1,8 @@
-# Advanced Classification Systems: Risk Prediction & Travel Behavior Insights
+      # Advanced Classification Systems: Risk Prediction & Travel Behavior Insights
 
 **Team:** Chicken Biryani  
-**Members:** - Areen Patil (IMT2023013)  
+**Members:** 
+- Areen Patil (IMT2023013)  
 - Prakrititz Borah (IMT2023547)  
 - Unnath Chittimalla (IMT2023620)
 
@@ -19,13 +20,13 @@ Our approach prioritizes data-centric AI over model-centric tuning. We utilized 
 
 ### 📊 Exploratory Analysis & Method
 We faced a significant class imbalance and skewed numerical features.
-![Risk Target Distribution](assets/risk_target_dist.png)
+![Risk Target Distribution](assets/dist.png)
 [cite_start]*Figure 1: Target Variable Distribution showing the imbalance between "No Risk" (0) and "Risk" (1)[cite: 324, 327].*
 
 **The Gaussian Fix:**
 Standard scaling failed because features like `ApplicantYears` followed a Power Law. [cite_start]We used **Quantile Transformation** to force these features into a Gaussian (Bell Curve) distribution, stabilizing the Neural Network gradients[cite: 364, 367].
 
-![Quantile Transformation](assets/risk_quantile_transform.png)
+![Quantile Transformation](assets/quantile.png)
 [cite_start]*Figure 2: Transformation of 'ApplicantYears' from raw skewed data (Left) to Gaussian distribution (Right)[cite: 368, 389].*
 
 ### 🧠 Key Architectures
@@ -50,7 +51,7 @@ Standard scaling failed because features like `ApplicantYears` followed a Power 
 * [cite_start]**Package Inclusion Score:** A summation of binary flags (Food + Transport + Guide) to quantify luxury level[cite: 90].
 * [cite_start]**Log Normalization:** Applied `np.log1p` to stay durations to handle power-law distributions[cite: 81].
 
-![Feature Correlation](assets/travel_correlation.png)
+![Feature Correlation](assets/corr-2.png)
 [cite_start]*Figure 3: Correlation Matrix confirming 'Package_Inclusion_Score' as a strong predictor[cite: 245].*
 
 ### 🏗️ Hybrid Stacking Architecture
@@ -62,7 +63,7 @@ We employed a **Stacking Classifier** with a "Passthrough" strategy:
 ### 🔍 Explainability (SHAP)
 We validated our model using SHAP values. [cite_start]The engineered feature `log_total_stay_nights` was identified as the #1 predictor of spending[cite: 270].
 
-![SHAP Summary Plot](assets/travel_shap.png)
+![SHAP Summary Plot](assets/shap.png)
 [cite_start]*Figure 4: SHAP summary plot showing feature impact on model output[cite: 302].*
 
 ### 📊 Performance

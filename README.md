@@ -19,13 +19,16 @@ Our approach prioritizes data-centric AI over model-centric tuning. We utilized 
 
 ### 📊 Exploratory Analysis & Method
 We faced a significant class imbalance and skewed numerical features.
-![Risk Target Distribution](assets/dist.png)
+
+<img src="assets/dist.png" alt="Risk Target Distribution" width="500">
+
 *Figure 1: Target Variable Distribution showing the imbalance between "No Risk" (0) and "Risk" (1).*
 
 **The Gaussian Fix:**
 Standard scaling failed because features like `ApplicantYears` followed a Power Law. We used **Quantile Transformation** to force these features into a Gaussian (Bell Curve) distribution, stabilizing the Neural Network gradients.
 
-![Quantile Transformation](assets/quantile.png)
+<img src="assets/quantile.png" alt="Quantile Transformation" width="700">
+
 *Figure 2: Transformation of 'ApplicantYears' from raw skewed data (Left) to Gaussian distribution (Right).*
 
 ### 🧠 Key Architectures
@@ -50,7 +53,8 @@ We engineered features based on domain logic rather than raw columns:
 * **Package Inclusion Score:** A summation of binary flags (Food + Transport + Guide) to quantify luxury level.
 * **Log Normalization:** Applied `np.log1p` to stay durations to handle power-law distributions.
 
-![Feature Correlation](assets/corr-2.png)
+<img src="assets/corr-2.png" alt="Feature Correlation" width="600">
+
 *Figure 3: Correlation Matrix confirming 'Package_Inclusion_Score' as a strong predictor.*
 
 ### 🏗️ Hybrid Stacking Architecture
@@ -62,7 +66,8 @@ We employed a **Stacking Classifier** with a "Passthrough" strategy:
 ### 🔍 Explainability (SHAP)
 We validated our model using SHAP values. The engineered feature `log_total_stay_nights` was identified as the #1 predictor of spending.
 
-![SHAP Summary Plot](assets/shap.png)
+<img src="assets/shap.png" alt="SHAP Summary Plot" width="700">
+
 *Figure 4: SHAP summary plot showing feature impact on model output.*
 
 ### 📊 Performance
